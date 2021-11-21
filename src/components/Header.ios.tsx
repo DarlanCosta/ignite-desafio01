@@ -2,7 +2,7 @@ import React, { useContext } from "react";
 import { View, Text, StyleSheet, SafeAreaView, Switch } from "react-native";
 import { DarkModeContext } from "../context/DarkMode";
 
-export function Header() {
+export function Header({quantity}: any) {
   const { isDarkMode, toggleDarkMode } = useContext(DarkModeContext);
 
   return (
@@ -20,7 +20,7 @@ export function Header() {
             isDarkMode && styles.headerTextDark,
           ]}
         >
-          do
+          do - Você tem {quantity} tarefas
         </Text>
         <View style={styles.darkModeView}>
           <Text style={styles.darkModeText}>

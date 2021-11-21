@@ -44,7 +44,7 @@ export function Home() {
 
   return (
     <View style={isDarkMode && styles.container}>
-      <Header />
+      <Header quantity={tasks.length | 0} />
 
       <TodoInput addTask={handleAddTask} />
 
