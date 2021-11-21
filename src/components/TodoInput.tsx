@@ -1,67 +1,109 @@
-import React, { useState } from 'react';
-import { StyleSheet, TextInput, TouchableOpacity, View } from 'react-native';
-import Icon from 'react-native-vector-icons/Feather';
+import React, { useContext, useState } from "react";
+import {
+  Image,
+  Platform,
+  StyleSheet,
+  TextInput,
+  TouchableOpacity,
+  View,
+} from "react-native";
+
+import checkIcon from "../assets/icons/Check.png";
+import { DarkModeContext } from "../context/DarkMode";
 
 interface TodoInputProps {
   addTask: (task: string) => void;
 }
 
 export function TodoInput({ addTask }: TodoInputProps) {
-  // const [task, setTask] = useState('');
+  const { isDarkMode } = useContext(DarkModeContext);
+  const [task, setTask] = useState("");
 
   function handleAddNewTask() {
-    //TODO - Call addTask if task not empty and clean input value 
+    addTask(task);
+    setTask("");
   }
 
   return (
-    <View style={styles.inputContainer}>
-      <TextInput 
-        style={styles.input} 
+    <View
+      style={[
+        styles.inputContainer,
+        isDarkMode && styles.inputContainerDark,
+        Platform.OS === "ios"
+          ? styles.inputIOSShadow
+          : styles.inputAndroidShadow,
+      ]}
+    >
+      <TextInput
+        style={[styles.input, isDarkMode && styles.inputDark]}
         placeholder="Adicionar novo todo..."
-        placeholderTextColor="#B2B2B2"
         returnKeyType="send"
-        selectionColor="#666666"
+        value={task}
+        onChangeText={setTask}
+        onSubmitEditing={handleAddNewTask}
+        placeholderTextColor={isDarkMode ? "#E1E1E6" : "#A09CB1"}
         //TODO - use value, onChangeText and onSubmitEditing props
       />
       <TouchableOpacity
         testID="add-new-task-button"
         activeOpacity={0.7}
-        style={styles.addButton}
+        style={[styles.addButton, isDarkMode && styles.addButtonDark]}
+        onPress={handleAddNewTask}
         //TODO - onPress prop
       >
-        <Icon name="chevron-right" size={24} color="#B2B2B2" />
+        <Image source={checkIcon} />
       </TouchableOpacity>
     </View>
-  )
+  );
 }
 
 const styles = StyleSheet.create({
   inputContainer: {
-    backgroundColor: '#FFF',
+    backgroundColor: "#F5F4F8",
     borderRadius: 5,
-    marginTop: -28,
-    marginHorizontal: 24,
-    flexDirection: 'row',
-    alignItems: 'center',
+    marginTop: -25,
+    marginHorizontal: 40,
+    height: 50,
+    flexDirection: "row",
+    alignItems: "center",
+  },
+  inputContainerDark: {
+    backgroundColor: "#413A6F",
   },
   input: {
     flex: 1,
-    height: 56,
-    paddingHorizontal: 20,
-    backgroundColor: '#FFF',
+    backgroundColor: "#F5F4F8",
+    color: "#141823",
+    paddingLeft: 12,
     borderTopLeftRadius: 5,
     borderBottomLeftRadius: 5,
-    borderRightWidth: 1,
-    borderRightColor: '#EBEBEB',
-    color: '#666666'
+  },
+  inputDark: {
+    backgroundColor: "#413A6F",
+    color: "#E1E1E6",
+  },
+  inputIOSShadow: {
+    shadowColor: "#000",
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 3.84,
+  },
+  inputAndroidShadow: {
+    elevation: 5,
   },
   addButton: {
-    backgroundColor: '#FFF',
-    height: 56,
-    paddingHorizontal: 12,
-    justifyContent: 'center',
-    alignItems: 'center',
+    backgroundColor: "#3FAD27",
+    height: 50,
+    paddingHorizontal: 16,
+    justifyContent: "center",
+    alignItems: "center",
     borderTopRightRadius: 5,
     borderBottomRightRadius: 5,
+  },
+  addButtonDark: {
+    backgroundColor: "#9347CA",
   },
 });

@@ -1,50 +1,67 @@
-import React from 'react';
-import { View, Text, StyleSheet, Image } from 'react-native';
-import { getStatusBarHeight } from 'react-native-iphone-x-helper';
+import React, { useContext } from "react";
+import { View, Text, StatusBar, StyleSheet, Switch } from "react-native";
+import { DarkModeContext } from "../context/DarkMode";
 
-import logoImg from '../assets/images/logo/logo.png';
+export function Header() {
+  const { isDarkMode, toggleDarkMode } = useContext(DarkModeContext);
 
-interface HeaderProps {
-  tasksCounter: number;
-}
-
-export function Header({ tasksCounter }: HeaderProps) {
-  // const tasksCounterText = TODO render 'tarefa' if tasksCounter equals 1, otherwise render 'tarefas'
-  
   return (
-    <View style={styles.container}>
-      <Image source={logoImg} />
-      
-      <View style={styles.tasks}>
-        <Text style={styles.tasksCounter}>Você tem </Text>
-        {/* <Text style={styles.tasksCounterBold}>{tasksCounter} {tasksCounterText}</Text> */}
+    <View style={[styles.header, isDarkMode && styles.headerDark]}>
+      <Text style={[styles.headerText, isDarkMode && styles.headerTextDark]}>
+        to.
+      </Text>
+      <Text
+        style={[
+          styles.headerText,
+          { fontFamily: "Poppins-SemiBold" },
+          isDarkMode && styles.headerTextDark,
+        ]}
+      >
+        do
+      </Text>
+      <View style={styles.darkModeView}>
+        <Text style={styles.darkModeText}>
+          {isDarkMode ? "Dark " : "Light "}
+        </Text>
+        <Switch
+          value={isDarkMode}
+          onValueChange={toggleDarkMode}
+          thumbColor={isDarkMode ? "#E1E1E6" : "#FFF"}
+          trackColor={{ true: "#273FAD", false: "#282B5A" }}
+        />
       </View>
     </View>
-  )
+  );
 }
 
 const styles = StyleSheet.create({
-  container: {
-    paddingTop: getStatusBarHeight(true) + 16,
-    paddingHorizontal: 24,
-    paddingBottom: 60,
-    backgroundColor: '#8257E5',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    flexDirection: 'row'
+  header: {
+    paddingTop: StatusBar.currentHeight,
+    paddingBottom: 44,
+    backgroundColor: "#273FAD",
+    justifyContent: "center",
+    alignItems: "center",
+    flexDirection: "row",
   },
-  tasks: {
-    alignItems: 'center',
-    flexDirection: 'row'
+  headerDark: {
+    backgroundColor: "#282B5A",
   },
-  tasksCounter: {
-    fontSize: 15,
-    color: '#FFF',
-    fontFamily: 'Inter-Regular',
+  headerText: {
+    fontSize: 24,
+    color: "#FFF",
+    fontFamily: "Poppins-Regular",
   },
-  tasksCounterBold: {
-    fontSize: 15,
-    color: '#FFF',
-    fontFamily: 'Inter-Bold',
-  }
+  headerTextDark: {
+    color: "#E1E1E6",
+  },
+  darkModeView: {
+    position: "absolute",
+    right: 0,
+    top: StatusBar.currentHeight,
+    alignItems: "center",
+    flexDirection: "row",
+  },
+  darkModeText: {
+    color: "#FFF",
+  },
 });
